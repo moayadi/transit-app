@@ -58,13 +58,13 @@ class DbClient:
         self.is_initialized = True
 
     # Later we will check to see if this is None to see whether to use Vault or not
-    def init_vault(self, addr, token, path, key_name):
+    def init_vault(self, addr, token, namespace, path, key_name):
         if not addr or not token:
             logger.warn('Skipping initialization...')
             return
         else:
             logger.warn("Connecting to vault server: {}".format(addr))
-            self.vault_client = hvac.Client(url=addr, token=token)
+            self.vault_client = hvac.Client(url=addr, token=token, namespace=namespace)
             self.key_name = key_name
             self.mount_point = path
             logger.debug("Initialized vault_client: {}".format(self.vault_client))

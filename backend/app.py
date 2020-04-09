@@ -120,7 +120,7 @@ if __name__ == '__main__':
     if conf.has_section('VAULT'):
       if conf['VAULT']['Enabled'].lower() == 'true':
         logger.info('Vault is enabled...')
-        dbc.init_vault(addr=conf['VAULT']['Address'], token=conf['VAULT']['Token'], path=conf['VAULT']['KeyPath'], key_name=conf['VAULT']['KeyName'])
+        dbc.init_vault(addr=conf['VAULT']['Address'], token=conf['VAULT']['Token'], namespace=conf['VAULT']['Namespace'], path=conf['VAULT']['KeyPath'], key_name=conf['VAULT']['KeyName'])
         if conf['VAULT']['DynamicDBCreds'].lower() == 'true':
           logger.debug('db_auth')
           dbc.vault_db_auth(conf['VAULT']['DynamicDBCredsPath'])

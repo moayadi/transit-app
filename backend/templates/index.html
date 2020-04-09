@@ -3,12 +3,17 @@
 {% block content %}
     <section class="hero">
       <div class="hero-body">
-        <div class="container has-text-centered">
+        <div>
           <h1 class="title"> 
             Protect your data!
           </h1>
           <p class="subtitle">
-            Using encryption as a service from <strong>Hashicorp Vault</strong> to protect PII and other sensitive data.
+            <br>
+            The transit secrets engine in HashiCorp Vault handles cryptographic functions on data in-transit. Vault doesn't store the data sent to the secrets engine. It can also be viewed as "cryptography as a service" or "encryption as a service". The transit secrets engine can also sign and verify data; generate hashes and HMACs of data; and act as a source of random bytes.
+            <p class="subtitle">
+            The primary use case for transit is to encrypt data from applications while still storing that encrypted data in some primary data store. This relieves the burden of proper encryption/decryption from application developers and pushes the burden onto the operators of Vault.
+            <p class="subtitle">
+            In this demonstration, we'll be using transit to protect Personally Identifiable Information (PII). It is also used to protect other sensitive data.
         </div>
         </p>
       </div>
