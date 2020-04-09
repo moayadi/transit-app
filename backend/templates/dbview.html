@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<br>
 <style>
 
 
@@ -42,10 +43,8 @@
     <div class="container" style="overflow-x:auto">
       <div class="tile is-ancestor">
         <div class="tile is-vertical is-parent">
-          <div class="tile is-child box">
-            <p class="title">Raw Database Results</p>
-            <p>SELECT * FROM `customers`;</p>
-          </div>
+            <p class="title" style="font-family:gilmer-web,Gilmer,Geneva,Tahoma,Helvetica,Verdana,sans-serif;">Raw Database Results</p>
+            <p><font color="#363942">SELECT * FROM `customers`;</font></p>
         </div>
       </div>
 
@@ -75,7 +74,7 @@
             <td>{{ record['salary'] }}</td>
           </tr>
           {% endfor %}
-          
+
         </tbody>
       </table>
     </div>

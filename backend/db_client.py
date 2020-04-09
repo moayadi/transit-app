@@ -19,10 +19,10 @@ CREATE TABLE IF NOT EXISTS `customers` (
 ) ENGINE=InnoDB;'''
 
 seed_customers = '''
-INSERT IGNORE into customers VALUES 
-  (1, "1/4/87", "Larry", "Johnson", "1/4/19", "450-09-7521", "123 Main St", "85000"),
-  (2, "4/18/34", "Sally", "Ureal", "1/4//19", "304-45-9430", "345 Elm Rd", "450000"),
-  (3, "1/4/87", "Larry", "Johnson", "1/11/19", "450-09-7521", "678 Creek Ln", "54000");
+INSERT IGNORE into customers VALUES
+  (2, "3/14/69", "Larry", "Johnson", "2020-01-01T14:49:12.301977", "912-01-7329", "Tyler, Texas", "7000000"),
+  (40, "11/26/69", "Shawn", "Kemp", "2020-02-21T10:24:55.985726", "304-45-9430", "Elkhart, Indiana", "15000000"),
+  (34, "2/20/63", "Charles", "Barkley", "2019-04-09T01:10:20.548144", "450-09-7521", "Leeds, Alabama", "9000000");
 '''
 
 logger = logging.getLogger(__name__)
@@ -97,7 +97,7 @@ class DbClient:
         logger.debug('Decrypting {}'.format(value))
         if not value.startswith('vault:v'):
             return value
-        else: 
+        else:
             try:
                 response = self.vault_client.secrets.transit.decrypt_data(
                     mount_point = self.mount_point,
@@ -112,13 +112,13 @@ class DbClient:
                 return decoded
             except Exception as e:
                 logger.error('There was an error encrypting the data: {}'.format(e))
-    
+
     # Long running apps may expire the DB connection
     def _execute_sql(self,sql,cursor):
         try:
             cursor.execute(sql)
             return 1
-        except mysql.connector.errors.OperationalError as e:            
+        except mysql.connector.errors.OperationalError as e:
             if e[0] == 2006:
                 logger.error('Error encountered: {}.  Reconnecting db...'.format(e))
                 self.init_db(self.uri, self.port, self.username, self.password, self.db)
@@ -194,10 +194,10 @@ class DbClient:
 
     def insert_customer_record(self, record):
         if self.vault_client is None:
-            statement = '''INSERT INTO `customers` (`birth_date`, `first_name`, `last_name`, `create_date`, `social_security_number`, `address`, `salary`) 
+            statement = '''INSERT INTO `customers` (`birth_date`, `first_name`, `last_name`, `create_date`, `social_security_number`, `address`, `salary`)
                             VALUES  ("{}", "{}", "{}", "{}", "{}", "{}", "{}");'''.format(record['birth_date'], record['first_name'], record['last_name'], record['create_date'], record['ssn'], record['address'], record['salary'] )
         else:
-            statement = '''INSERT INTO `customers` (`birth_date`, `first_name`, `last_name`, `create_date`, `social_security_number`, `address`, `salary`) 
+            statement = '''INSERT INTO `customers` (`birth_date`, `first_name`, `last_name`, `create_date`, `social_security_number`, `address`, `salary`)
                             VALUES  ("{}", "{}", "{}", "{}", "{}", "{}", "{}");'''.format(self.encrypt(record['birth_date']), record['first_name'], record['last_name'], record['create_date'], self.encrypt(record['ssn']), self.encrypt(record['address']), self.encrypt(record['salary']) )
         logger.debug('SQL Statement: {}'.format(statement))
         cursor = self.conn.cursor()
@@ -207,11 +207,11 @@ class DbClient:
 
     def update_customer_record(self, record):
         if self.vault_client is None:
-            statement = '''UPDATE `customers`  
+            statement = '''UPDATE `customers`
                        SET birth_date = "{}", first_name = "{}", last_name = "{}", social_security_number = "{}", address = "{}", salary = "{}"
                        WHERE cust_no = {};'''.format(record['birth_date'], record['first_name'], record['last_name'], record['ssn'], record['address'], record['salary'], record['cust_no'] )
         else:
-            statement = '''UPDATE `customers`  
+            statement = '''UPDATE `customers`
                        SET birth_date = "{}", first_name = "{}", last_name = "{}", social_security_number = "{}", address = "{}", salary = "{}"
                        WHERE cust_no = {};'''.format(self.encrypt(record['birth_date']), record['first_name'], record['last_name'], self.encrypt(record['ssn']), self.encrypt(record['address']), self.encrypt(record['salary']), record['cust_no'] )
         logger.debug('Sql Statement: {}'.format(statement))

@@ -108,7 +108,7 @@ def update_submit():
 if __name__ == '__main__':
   logger.warn('In Main...')
   conf = read_config()
-  
+
   logging.basicConfig(
     level=log_level[conf['DEFAULT']['LogLevel']],
     format='%(asctime)s - %(levelname)8s - %(name)9s - %(funcName)15s - %(message)s'
@@ -124,25 +124,24 @@ if __name__ == '__main__':
         if conf['VAULT']['DynamicDBCreds'].lower() == 'true':
           logger.debug('db_auth')
           dbc.vault_db_auth(conf['VAULT']['DynamicDBCredsPath'])
-          dbc.init_db(uri=conf['DATABASE']['Address'], 
-          prt=conf['DATABASE']['Port'], 
-          uname=dbc.username, 
-          pw=dbc.password, 
+          dbc.init_db(uri=conf['DATABASE']['Address'],
+          prt=conf['DATABASE']['Port'],
+          uname=dbc.username,
+          pw=dbc.password,
           db=conf['DATABASE']['Database']
           )
-      
+
       if dbc.is_initialized is False: # we didn't use dynamic credentials
         logger.info('Using DB credentials from config.ini...')
         dbc.init_db(
-          uri=conf['DATABASE']['Address'], 
-          prt=conf['DATABASE']['Port'], 
-          uname=conf['DATABASE']['User'], 
-          pw=conf['DATABASE']['Password'], 
+          uri=conf['DATABASE']['Address'],
+          prt=conf['DATABASE']['Port'],
+          uname=conf['DATABASE']['User'],
+          pw=conf['DATABASE']['Password'],
           db=conf['DATABASE']['Database']
-        )  
+        )
     logger.info('Starting Flask server on {} listening on port {}'.format('0.0.0.0', '5000'))
     app.run(host='0.0.0.0', port=5000)
 
   except Exception as e:
     logging.error("There was an error starting the server: {}".format(e))
-  

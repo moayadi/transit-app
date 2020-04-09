@@ -8,14 +8,14 @@ docker pull mysql/mysql-server:5.7.21
 
 # Create a directory for our data (change the following
 # line if running on Windows)
-mkdir ~/workshop-data
+mkdir workshop-data
 
 # Run the container.  The following command creates a
 # database named 'my_app', specifies the root user
 # password as 'root', and adds a user named vault
 docker run --name workshop-mysql \
   -p 3306:3306 \
-  -v ~/workshop-data:/var/lib/mysql \
+  -v workshop-data:/var/lib/mysql \
   -e MYSQL_ROOT_PASSWORD=root \
   -e MYSQL_ROOT_HOST=% \
   -e MYSQL_DATABASE=my_app \
