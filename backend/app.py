@@ -7,6 +7,7 @@ import logging
 import logging.config
 
 import db_client
+import db_client_transform
 
 dbc = None
 vclient = None
@@ -115,12 +116,16 @@ if __name__ == '__main__':
   )
 
   try:
-    dbc = db_client.DbClient()
+    if conf['VAULT']['Transform'].lower() == 'true':
+      dbc = db_client_transform.DbClient()
+      logger.info('Using Transform database client...')
+    else:
+      dbc = db_client.DbClient()
 
     if conf.has_section('VAULT'):
       if conf['VAULT']['Enabled'].lower() == 'true':
         logger.info('Vault is enabled...')
-        dbc.init_vault(addr=conf['VAULT']['Address'], token=conf['VAULT']['Token'], namespace=conf['VAULT']['Namespace'], path=conf['VAULT']['KeyPath'], key_name=conf['VAULT']['KeyName'])
+        dbc.init_vault(addr=conf['VAULT']['Address'], token=conf['VAULT']['Token'], namespace=conf['VAULT']['Namespace'], path=conf['VAULT']['KeyPath'], key_name=conf['VAULT']['KeyName'], transform_path=conf['VAULT']['TransformPath'], ssn_role=conf['VAULT']['SSNRole'])
         if conf['VAULT']['DynamicDBCreds'].lower() == 'true':
           logger.debug('db_auth')
           dbc.vault_db_auth(conf['VAULT']['DynamicDBCredsPath'])
