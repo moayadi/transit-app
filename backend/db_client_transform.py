@@ -21,9 +21,9 @@ CREATE TABLE IF NOT EXISTS `customers` (
 
 seed_customers = '''
 INSERT IGNORE into customers VALUES
-  (2, "3/14/69", "Larry", "Johnson", "2020-01-01T14:49:12.301977", "912-01-7329", "Tyler, Texas", "7000000"),
-  (40, "11/26/69", "Shawn", "Kemp", "2020-02-21T10:24:55.985726", "304-45-9430", "Elkhart, Indiana", "15000000"),
-  (34, "2/20/63", "Charles", "Barkley", "2019-04-09T01:10:20.548144", "450-09-7521", "Leeds, Alabama", "9000000");
+  (2, "3/14/69", "Larry", "Johnson", "2020-01-01T14:49:12.301977", "111-22-3333", "Tyler, Texas", "7000000"),
+  (40, "11/26/69", "Shawn", "Kemp", "2020-02-21T10:24:55.985726", "222-33-4444", "Elkhart, Indiana", "15000000"),
+  (34, "2/20/63", "Charles", "Barkley", "2019-04-09T01:10:20.548144", "333-44-5555", "Leeds, Alabama", "9000000");
 '''
 
 logger = logging.getLogger(__name__)
