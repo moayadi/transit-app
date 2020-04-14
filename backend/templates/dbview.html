@@ -52,26 +52,26 @@
         <thead>
           <tr>
             <th>cust_no</th>
-            <th>birth_date</th>
-            <th>first_name</th>
             <th>last_name</th>
-            <th>create_date</th>
+            <th>first_name</th>
+            <th>birth_date</th>
             <th>social_security_number</th>
             <th>address</th>
             <th>salary</th>
+            <th>create_date</th>
           </tr>
         </thead>
         <tbody>
           {% for record in results %}
           <tr>
             <td>{{ record['customer_number'] }}</td>
-            <td>{{ record['birth_date'] }}</td>
-            <td>{{ record['first_name'] }}</td>
             <td>{{ record['last_name'] }}</td>
-            <td>{{ record['create_date'] }}</td>
+            <td>{{ record['first_name'] }}</td>
+            <td>{{ record['birth_date'] }}</td>
             <td>{{ record['ssn'] }}</td>
             <td>{{ record['address'] }}</td>
             <td>{{ record['salary'] }}</td>
+            <td>{{ record['create_date'] }}</td>
           </tr>
           {% endfor %}
 
