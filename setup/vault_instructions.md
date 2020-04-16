@@ -1,6 +1,6 @@
 # Vault Setup
 
-If you wish to use Transform, make sure you are using Vault Enterprise. The Vault Enterprise binary is available at releases.hashicorp.com/vault, denoted by a +ent in the name, and will run for 30 minutes without a license before shutting down. 
+If you wish to use Transform, make sure you are using Vault Enterprise. The Vault Enterprise binary is available at releases.hashicorp.com/vault, and will be denoted by a +ent in the name. It will run for 30 minutes without a license before shutting down. 
 
 Run the server:
 ```
@@ -98,7 +98,7 @@ vault write -f lob_a/workshop/transit/keys/archive-key
 
 ## Configure Transform:
 
-We need to enable the Transform engine, and configure a transformation for our application to use:
+We need to enable the Transform engine and configure a transformation for our application to use:
 
 ```
 # Enable the secret engine
