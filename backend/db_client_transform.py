@@ -4,6 +4,7 @@ import datetime
 import hvac
 import base64
 import logging
+import requests
 
 customer_table = '''
 CREATE TABLE IF NOT EXISTS `customers` (
@@ -36,8 +37,10 @@ class DbClient:
     password = None
     is_initialized = False
 
-    #def __init__(self, uri, prt, uname, pw, db):
-    #    self.init_db(uri, prt, uname, pw, db)
+    # Andy adding for Transform support
+    namespace = None
+    transform_mount_point = None
+    ssn_role = None
 
     def init_db(self, uri, prt, uname, pw, db):
         self.uri = uri
@@ -58,7 +61,7 @@ class DbClient:
         self.is_initialized = True
 
     # Later we will check to see if this is None to see whether to use Vault or not
-    def init_vault(self, addr, token, namespace, path, key_name):
+    def init_vault(self, addr, token, namespace, path, key_name, transform_path, ssn_role):
         if not addr or not token:
             logger.warn('Skipping initialization...')
             return
@@ -67,6 +70,10 @@ class DbClient:
             self.vault_client = hvac.Client(url=addr, token=token, namespace=namespace)
             self.key_name = key_name
             self.mount_point = path
+            self.transform_mount_point = transform_path
+            self.ssn_role = ssn_role
+            self.namespace = namespace
+            self.token = token
             logger.debug("Initialized vault_client: {}".format(self.vault_client))
 
     def vault_db_auth(self, path):
@@ -90,6 +97,44 @@ class DbClient:
             return response['data']['ciphertext']
         except Exception as e:
             logger.error('There was an error encrypting the data: {}'.format(e))
+
+    def encode_ssn(self, value):
+        try:
+            # transform not available in hvac, raw api call
+            url = self.vault_client.url + "/v1/" + self.transform_mount_point + "/encode/" + self.ssn_role
+            payload = "{\n  \"value\": \"" + value + "\",\n  \"transformation\": \"" + self.ssn_role + "-fpe\"\n}"
+            headers = {
+                'X-Vault-Token': self.vault_client.token,
+                'X-Vault-Namespace': self.namespace,
+                'Content-Type': "application/json",
+                'cache-control': "no-cache"
+            }
+
+            response = requests.request("POST", url, data=payload, headers=headers)
+            logger.debug('Response: {}'.format(response.text))
+            return response.json()['data']['encoded_value']
+        except Exception as e:
+            logger.error('There was an error encrypting the data: {}'.format(e))
+
+    def decode_ssn(self, value):
+        # we're going to have funny stuff if ProtectRecords is false
+        logger.debug('Decoding {}'.format(value))
+        try:
+            # transform not available in hvac, raw api call
+            url = self.vault_client.url + "/v1/" + self.transform_mount_point + "/decode/" + self.ssn_role
+            payload = "{\n  \"value\": \"" + value + "\",\n  \"transformation\": \"" + self.ssn_role + "-fpe\"\n}"
+            headers = {
+                'X-Vault-Token': self.vault_client.token,
+                'X-Vault-Namespace': self.namespace,
+                'Content-Type': "application/json",
+                'cache-control': "no-cache"
+            }
+
+            response = requests.request("POST", url, data=payload, headers=headers)
+            logger.debug('Response: {}'.format(response.text))
+            return response.json()['data']['decoded_value']
+        except Exception as e:
+            logger.error('There was an error decoding the data: {}'.format(e))
 
     # The data returned from Transit is base64 encoded so we decode it before returning
     def decrypt(self, value):
@@ -158,7 +203,7 @@ class DbClient:
                 r['salary'] = row[7]
                 if self.vault_client is not None and not raw:
                     r['birth_date'] = self.decrypt(r['birth_date'])
-                    r['ssn'] = self.decrypt(r['ssn'])
+                    r['ssn'] = self.decode_ssn(r['ssn'])
                     r['address'] = self.decrypt(r['address'])
                     r['salary'] = self.decrypt(r['salary'])
                 results.append(r)
@@ -184,7 +229,7 @@ class DbClient:
                 r['salary'] = row[7]
                 if self.vault_client is not None:
                     r['birth_date'] = self.decrypt(r['birth_date'])
-                    r['ssn'] = self.decrypt(r['ssn'])
+                    r['ssn'] = self.decode_ssn(r['ssn'])
                     r['address'] = self.decrypt(r['address'])
                     r['salary'] = self.decrypt(r['salary'])
                 results.append(r)
@@ -198,7 +243,7 @@ class DbClient:
                             VALUES  ("{}", "{}", "{}", "{}", "{}", "{}", "{}");'''.format(record['birth_date'], record['first_name'], record['last_name'], record['create_date'], record['ssn'], record['address'], record['salary'] )
         else:
             statement = '''INSERT INTO `customers` (`birth_date`, `first_name`, `last_name`, `create_date`, `social_security_number`, `address`, `salary`)
-                            VALUES  ("{}", "{}", "{}", "{}", "{}", "{}", "{}");'''.format(self.encrypt(record['birth_date']), record['first_name'], record['last_name'], record['create_date'], self.encrypt(record['ssn']), self.encrypt(record['address']), self.encrypt(record['salary']) )
+                            VALUES  ("{}", "{}", "{}", "{}", "{}", "{}", "{}");'''.format(self.encrypt(record['birth_date']), record['first_name'], record['last_name'], record['create_date'], self.encode_ssn(record['ssn']), self.encrypt(record['address']), self.encrypt(record['salary']) )
         logger.debug('SQL Statement: {}'.format(statement))
         cursor = self.conn.cursor()
         self._execute_sql(statement, cursor)
