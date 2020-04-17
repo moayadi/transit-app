@@ -17,5 +17,5 @@ Run the application from the backend folder:
 python3 app.py
 ```
 
-# Known Issues:
+### Known Issues:
 Browser window must be greater than 1100 or so pixels wide due to a CSS issue 
