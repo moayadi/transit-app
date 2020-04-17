@@ -1,7 +1,7 @@
 # Python Setup
 
 ```
-pip3 install mysql-connector-python hvac python3-flask
+pip3 install mysql-connector-python hvac Flask
 ```
 
 Run the application from the backend folder:
