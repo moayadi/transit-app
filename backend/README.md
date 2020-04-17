@@ -18,4 +18,4 @@ python3 app.py
 ```
 
 ### Known Issues:
-Browser window must be greater than 1100 or so pixels wide due to a CSS issue 
+- Browser window must be greater than 1100 or so pixels wide due to a CSS issue 
