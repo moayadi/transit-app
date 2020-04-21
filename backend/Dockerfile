@@ -1,5 +1,5 @@
 FROM ubuntu:16.04
-# RUN apt-get update -y
+RUN apt-get update -y
 RUN apt-get install -y python3-pip
 COPY . /app
 WORKDIR /app
