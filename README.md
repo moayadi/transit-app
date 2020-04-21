@@ -7,3 +7,5 @@ The [Transit secrets engine](https://www.vaultproject.io/docs/secrets/transit) i
 The [Transform secrets engine](https://www.vaultproject.io/docs/secrets/transform) in HashiCorp Vault provides an API that can be used to perform secure data transformation and tokenization against a provided input value. This can be used to implement format preserving encryption as well as masking of sensitive data. 
 
 This repo contains a simple CRUD app that can integrate with Vault to protect customer records.
+
+![](demo.png?raw=true)
