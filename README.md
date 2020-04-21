@@ -1,6 +1,6 @@
 # Encryption as a Service Example
 
-This repo seeks to provide an example that demonstrates how to protect sensitive data using HashiCorp Vault.
+This repo seeks to provide an example that demonstrates how to protect sensitive data using [HashiCorp Vault](http://hashicorp.com/products/vault/).
 
 The [Transit secrets engine](https://www.vaultproject.io/docs/secrets/transit) in HashiCorp Vault provides an API that can be used to perform a variety of cryptographic operations, such as encryption, decryption, signing, hashing, and HMAC. It can also be used for secure key generation, or providing a unified method for random number generation.
 
