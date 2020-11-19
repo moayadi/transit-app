@@ -7,7 +7,7 @@ import json
 import logging
 import logging.config
 
-from backend import db_client, db_client_transform
+import db_client, db_client_transform
 
 dbc = None
 vclient = None
