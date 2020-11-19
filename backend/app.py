@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask, request, render_template, abort
+from flask import Flask, request, render_template
 
 from datetime import datetime
 import configparser
@@ -7,8 +7,7 @@ import json
 import logging
 import logging.config
 
-import db_client
-import db_client_transform
+from backend import db_client, db_client_transform
 
 dbc = None
 vclient = None
@@ -141,6 +140,8 @@ if __name__ == '__main__':
           pw=dbc.password,
           db=conf['DATABASE']['Database']
           )
+        logger.debug(dbc.username)
+        logger.debug(dbc.password)
 
       if dbc.is_initialized is False: # we didn't use dynamic credentials
         logger.info('Using DB credentials from config.ini...')
