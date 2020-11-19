@@ -147,7 +147,7 @@ if __name__ == '__main__':
           uri=conf['DATABASE']['Address'],
           prt=conf['DATABASE']['Port'],
           uname="root",
-          pw="password",
+          pw="root",
           db=conf['DATABASE']['Database']
         )
     logger.info('Starting Flask server on {} listening on port {}'.format('0.0.0.0', '5000'))
