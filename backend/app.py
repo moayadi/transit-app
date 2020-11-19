@@ -140,16 +140,14 @@ if __name__ == '__main__':
           pw=dbc.password,
           db=conf['DATABASE']['Database']
           )
-        logger.debug(dbc.username)
-        logger.debug(dbc.password)
 
       if dbc.is_initialized is False: # we didn't use dynamic credentials
         logger.info('Using DB credentials from config.ini...')
         dbc.init_db(
           uri=conf['DATABASE']['Address'],
           prt=conf['DATABASE']['Port'],
-          uname=conf['DATABASE']['User'],
-          pw=conf['DATABASE']['Password'],
+          uname="root",
+          pw="password",
           db=conf['DATABASE']['Database']
         )
     logger.info('Starting Flask server on {} listening on port {}'.format('0.0.0.0', '5000'))
