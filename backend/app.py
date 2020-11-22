@@ -151,7 +151,7 @@ if __name__ == '__main__':
           db=conf['DATABASE']['Database']
         )
     logger.info('Starting Flask server on {} listening on port {}'.format('0.0.0.0', '5000'))
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5001)
 
   except Exception as e:
     logging.error("There was an error starting the server: {}".format(e))
