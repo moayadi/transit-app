@@ -1,0 +1,35 @@
+{
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "containerDefinitions": [
+    {
+      "name": "transit-app-pass",
+      "image": "imoayad/transit-app:pass",
+      "memory": 256,
+      "cpu": 256,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 5000,
+          "protocol": "tcp"
+        }
+      ],
+      "logConfiguration":{
+            "logDriver":"awslogs",
+            "options":{
+               "awslogs-group":"/ecs/awslogs-transit-app",
+               "awslogs-region":"us-east-1",
+               "awslogs-stream-prefix":"ecs"
+            }
+      }
+    }
+  ],
+  "volumes": [],
+  "networkMode": "awsvpc",
+  "placementConstraints": [],
+  "family": "transit-app-pass",
+  "memory": "512",
+  "cpu": "256",
+  "executionRoleArn": "arn:aws:iam::667526428872:role/ecsTaskExecutionRole"
+}
